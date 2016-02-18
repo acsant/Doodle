@@ -27,9 +27,13 @@ class Doodle {
 
         // Defining all the views
         MenuView menu = new MenuView();
-        ToolsPanel tools = new ToolsPanel();
-        TimeSlider playBack = new TimeSlider();
-        DrawingCanvas canvas = new DrawingCanvas();
+        ToolsPanel tools = new ToolsPanel(model);
+        TimeSlider playBack = new TimeSlider(model);
+        DrawingCanvas canvas = new DrawingCanvas(model);
+
+        model.addObserver(canvas);
+        model.addObserver(playBack);
+        model.notifyObservers();
 
         // Setup the views
         frame.setLayout(new BorderLayout());

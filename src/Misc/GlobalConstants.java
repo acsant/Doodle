@@ -18,6 +18,8 @@ public class GlobalConstants {
     public static final String STUDENT_NUMBER = "20461809";
     public static final String DESCRIPTION = "";
     public static final String COLOR_PALETTE_NAME = "Colors";
+    public static final String TIMELINE_NAME = "Animate";
+    public static final int TIMELINE_SPACING = 10;
     public static int COLOR_SWATCH_DIM = 15;
     public static final List MICROSOFT_SUGGESTED_COLORS = Arrays.asList(
             "Black", "Gray", "Maroon", "Red", "Green", "Lime", "Olive", "Yellow", "Navy", "Blue", "Purple",

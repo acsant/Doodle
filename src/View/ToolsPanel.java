@@ -6,27 +6,33 @@
 package View;
 
 import Misc.GlobalConstants;
+import Model.Model;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
 import java.util.Observable;
 import java.util.Observer;
 
 public class ToolsPanel extends JPanel implements Observer {
 
+    Model model;
+    Color[] colors = (Color[])GlobalConstants.COLORS.toArray();
+
     // Instantiating the tools panel
-    public ToolsPanel () {
+    public ToolsPanel (Model _model) {
         super();
+        model = _model;
         super.setLayout(new BorderLayout());
         Box vertBox = Box.createVerticalBox();
         JPanel colorPalette = new JPanel();
         ButtonGroup colorGroup = new ButtonGroup();
         // Setup the palletes
         colorPalette.setLayout(new GridLayout(0, 2));
-        Color[] colors = (Color[])GlobalConstants.COLORS.toArray();
         ImageIcon[] icons = new ImageIcon[colors.length];
         int swatchDim = GlobalConstants.COLOR_SWATCH_DIM;
         for (int i = 0; i < colors.length; i++) {
@@ -38,15 +44,18 @@ public class ToolsPanel extends JPanel implements Observer {
         }
         JToggleButton colorSwatch;
         for (int i = 0; i < icons.length; i++) {
+            PaletteController pc = new PaletteController(i);
             colorSwatch = new JToggleButton(icons[i], i==0);
             colorSwatch.setAlignmentX(SwingConstants.CENTER);
             colorSwatch.setAlignmentY(SwingConstants.CENTER);
             colorSwatch.setSize(new Dimension(swatchDim, swatchDim));
             colorSwatch.setBorderPainted(true);
             colorSwatch.setOpaque(true);
+            colorSwatch.addItemListener(pc);
             colorGroup.add(colorSwatch);
             colorPalette.add(colorSwatch);
         }
+        model.setSelectedColor(colors[0]);
 
         // Set look and feel
         TitledBorder titledBorder = BorderFactory.createTitledBorder(new EtchedBorder(Color.BLACK,Color.BLACK),
@@ -61,5 +70,21 @@ public class ToolsPanel extends JPanel implements Observer {
     @Override
     public void update(Observable o, Object arg) {
 
+    }
+
+    private class PaletteController implements ItemListener {
+
+        private int index = 0;
+
+        PaletteController (int _index) {
+            index = _index;
+        }
+
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                model.setSelectedColor(colors[index]);
+            }
+        }
     }
 }

@@ -47,7 +47,7 @@ public class DrawingCanvas extends JPanel implements Observer {
         ArrayList<Coordinate> coord = model.getDrawingCoords();
         int prevX = -1;
         int prevY = -1;
-        int strokes = model.getTimeLineState()/ GlobalConstants.TIMELINE_SPACING;
+        int strokes = model.getTimeLineState() / GlobalConstants.TIMELINE_SPACING;
         for (Coordinate pos : coord) {
             if (strokes == 0 && model.isTimeLineAction()) {
                 break;
@@ -58,6 +58,8 @@ public class DrawingCanvas extends JPanel implements Observer {
             } else {
                 if (pos.key() != -1) {
                     graphics2D.setColor(pos.color());
+                    graphics2D.setStroke(new BasicStroke(pos.strokeThickness(),
+                            BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
                     graphics2D.drawLine(prevX, prevY, pos.key(), pos.value());
                 } else {
                     strokes--;

@@ -31,8 +31,8 @@ class Doodle {
         TimeSlider playBack = new TimeSlider(model);
         DrawingCanvas canvas = new DrawingCanvas(model);
 
-        model.addObserver(canvas);
         model.addObserver(playBack);
+        model.addObserver(canvas);
         model.notifyObservers();
 
         // Setup the views
@@ -43,7 +43,7 @@ class Doodle {
         frame.add(canvas, BorderLayout.CENTER);
 
         frame.setMinimumSize(GlobalConstants.MINIMUM_SCREEN_SIZE);
-        frame.setSize(GlobalConstants.MINIMUM_SCREEN_SIZE);
+        frame.setSize(GlobalConstants.MINIMUM_SCREEN_SIZE.width, GlobalConstants.MINIMUM_SCREEN_SIZE.height + 200);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // Make the frame visible
         frame.setVisible(true);

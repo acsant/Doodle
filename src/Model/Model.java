@@ -1,6 +1,10 @@
 package Model;
 
+import Misc.GlobalConstants;
+
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Observable;
 
@@ -20,6 +24,9 @@ public class Model extends Observable {
     private boolean timeLineAction = false;
     private int timeLineState = -1;
     private boolean newStroke = true;
+    private Timer animationTimer;
+    private boolean animate = false;
+    private int strokeThicknes = 1;
 
     public Model () {
         super.setChanged();
@@ -36,7 +43,7 @@ public class Model extends Observable {
             if (x == y && x == -1) {
                 newStroke = true;
             }
-            Coordinate pos = new Coordinate(x, y, selectedColor);
+            Coordinate pos = new Coordinate(x, y, selectedColor, strokeThicknes);
             drawingCoords.add(pos);
             if (currentX != -1) {
                 prevX = currentX;
@@ -50,6 +57,29 @@ public class Model extends Observable {
                 setChanged();
                 notifyViews();
             }
+        }
+    }
+
+    public void playAnimation() {
+        int tempStrokeCount = strokeCount;
+        animate = true;
+        strokeCount = 0;
+        setTimeLineState(0);
+        ActionListener timeLineAnimation = e->animate(tempStrokeCount);
+        animationTimer = new Timer(500,timeLineAnimation);
+        animationTimer.start();
+        System.out.println("Animation done");
+    }
+
+    private void animate (int maxStroke) {
+        System.out.println("Enter Animate");
+        setTimeLineState(strokeCount * GlobalConstants.TIMELINE_SPACING);
+        setTimeLineAction(true);
+        if (strokeCount < maxStroke) {
+            strokeCount++;
+        } else {
+            animate = false;
+            animationTimer.stop();
         }
     }
 
@@ -144,6 +174,21 @@ public class Model extends Observable {
         this.newStroke = newStroke;
     }
 
+    public boolean isAnimate() {
+        return animate;
+    }
 
+    public void setAnimate(boolean animate) {
+        this.animate = animate;
+    }
+
+
+    public int getStrokeThicknes() {
+        return strokeThicknes;
+    }
+
+    public void setStrokeThicknes(int strokeThicknes) {
+        this.strokeThicknes = strokeThicknes;
+    }
 
 }

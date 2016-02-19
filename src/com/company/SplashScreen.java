@@ -3,11 +3,17 @@
  * University of Waterloo - CS 349
  */
 
-package com.company;import javax.swing.*;
+package com.company;
+
+import Misc.GlobalConstants;
+import sun.net.ResourceManager;
+
+import javax.swing.*;
 import java.awt.*;
+
 public class SplashScreen extends JWindow {
     // Breakout Splash Screen
-    //private String splash_file = "Resources/CS349.PNG";
+    private String splash_file = "/Resources/dodle.png";
     private final String NAME = "Name: ";
     private final String USER_ID = "User-ID: ";
     private final String STUDENT_NUMBER = "Student Number: ";
@@ -16,17 +22,21 @@ public class SplashScreen extends JWindow {
     // Splash Screen Constructor
     public SplashScreen (String name, String userId, String studentNumber, String description, Dimension SCREEN_SIZE) {
         // Variable Declaration
-        JPanel container = (JPanel) getContentPane();
-
-       // ImageIcon img = new ImageIcon(splash_file);
-       // JLabel bcgImg = new JLabel(img);
-        JLabel displayInfo = new JLabel("<html>" + NAME + name + "<br>" + USER_ID + userId + "<br>" +
-                STUDENT_NUMBER + studentNumber + "<br>" + DESCRIPTION + description + "</html>");
-
+        int width = GlobalConstants.MINIMUM_SCREEN_SIZE.width;
+        int height = GlobalConstants.MINIMUM_SCREEN_SIZE.height;
+        //JPanel container = (JPanel) getContentPane();
+        ImageIcon img = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+                (ResourceManager.class.getResource(splash_file))
+        ));
+        //ImageIcon img = new ImageIcon(scaledImg);
+        JLabel bcgImg = new JLabel(img);
+        //JLabel displayInfo = new JLabel("<html>" + NAME + name + "<br>" + USER_ID + userId + "<br>" +
+        //        STUDENT_NUMBER + studentNumber + "<br>" + DESCRIPTION + description + "</html>");
         // Set the container content
-       // container.add(bcgImg, BorderLayout.CENTER);
-        container.add(displayInfo, BorderLayout.SOUTH);
-        setSize((SCREEN_SIZE.width - getWidth()) / 2, (SCREEN_SIZE.height - getHeight()) / 2);
+        super.add(bcgImg, BorderLayout.CENTER);
+        //super.add(displayInfo, BorderLayout.SOUTH);
+        super.setName("Doodle");
+        setSize(width, height);
         setLocation((SCREEN_SIZE.width - getWidth()) / 2, (SCREEN_SIZE.height - getHeight()) / 2);
 
         setVisible(true);

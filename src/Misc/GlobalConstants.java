@@ -19,12 +19,18 @@ public class GlobalConstants {
     public static final String DESCRIPTION = "";
     public static final String COLOR_PALETTE_NAME = "Colors";
     public static final String TIMELINE_NAME = "Animate";
+    public static final String START_BUTTON = "Start";
+    public static final String END_BUTTON = "End";
+    public static final String PLAY_BUTTON = "Play";
     public static final int TIMELINE_SPACING = 10;
-    public static int COLOR_SWATCH_DIM = 15;
+    public static final int COLOR_SWATCH_DIM = 15;
+    public static final Dimension STROKE_BUTTON_DIM = new Dimension(80, 25);
+    public static final String STROKE_PALETTE_NAME = "Thickness";
     public static final List MICROSOFT_SUGGESTED_COLORS = Arrays.asList(
             "Black", "Gray", "Maroon", "Red", "Green", "Lime", "Olive", "Yellow", "Navy", "Blue", "Purple",
             "Fuchsia", "Teal", "Aqua", "Silver", "White"
     );
+    public static final int[] STROKES = {1, 3, 8, 12};
     public static final List COLORS = Arrays.asList(
         Color.BLACK, Color.GRAY, new Color(128, 0, 0), Color.RED, Color.GREEN, new Color(195, 255, 0),
             new Color(128, 128, 0), Color.YELLOW, new Color(0,0,128), Color.BLUE, new Color(128, 0, 128),

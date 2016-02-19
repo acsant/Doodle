@@ -45,13 +45,36 @@ public class DrawingCanvas extends JPanel implements Observer {
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         ArrayList<Coordinate> coord = model.getDrawingCoords();
+
         int prevX = -1;
         int prevY = -1;
         int strokes = model.getTimeLineState() / GlobalConstants.TIMELINE_SPACING;
+        int temp = 0;
+        int lastRatio = model.getTimeLineState() - (strokes*GlobalConstants.TIMELINE_SPACING);
+        int lastPoint = -1;
+        if (model.getTimeLineState() % GlobalConstants.TIMELINE_SPACING != 0) {
+            strokes++;
+        }
+        temp = strokes;
         for (Coordinate pos : coord) {
             if (strokes == 0 && model.isTimeLineAction()) {
                 break;
             }
+            if (strokes == 1 && model.isTimeLineAction() && lastPoint == -1) {
+                if (model.getStrokeLengths().size() == model.getMaxStroke()) {
+                    lastPoint = model.getStrokeLengths().get(temp - 1) * (lastRatio * GlobalConstants.TIMELINE_SPACING);
+                    lastPoint = lastPoint/100;
+                }
+            }
+
+            if (temp*GlobalConstants.TIMELINE_SPACING == model.getTimeLineState()) {
+                lastPoint = -1;
+            }
+
+            if (lastPoint == 0) {
+                break;
+            }
+
             if (prevX == -1) {
                 prevX = pos.key();
                 prevY = pos.value();
@@ -63,15 +86,18 @@ public class DrawingCanvas extends JPanel implements Observer {
                     graphics2D.drawLine(prevX, prevY, pos.key(), pos.value());
                 } else {
                     strokes--;
+                    lastPoint = 0;
                 }
                 prevX = pos.key();
                 prevY = pos.value();
             }
+            lastPoint--;
         }
     }
 
     @Override
     public void update(Observable o, Object arg) {
+        System.out.println("Repaint Called");
         repaint();
     }
 

@@ -62,6 +62,7 @@ public class TimeSlider extends JPanel implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
+        timeLine.removeChangeListener(sc);
         if (model.getStrokeCount() > 0) {
             int sliderVal = GlobalConstants.TIMELINE_SPACING * model.getStrokeCount();
             playButton.setEnabled(true);
@@ -78,38 +79,36 @@ public class TimeSlider extends JPanel implements Observer {
                     // Disable play in this case
                     playButton.setEnabled(false);
                 }
-                timeLine.setValue(sliderVal);
+
                 //model.setTimeLineAction(false);
             }
             timeLine.setMajorTickSpacing(GlobalConstants.TIMELINE_SPACING);
         }
+        timeLine.setValue(model.getTimeLineState());
+        System.out.println(model.getTimeLineState());
+        timeLine.addChangeListener(sc);
     }
 
     private class SliderController implements ChangeListener, ActionListener {
         @Override
         public void stateChanged(ChangeEvent e) {
             JSlider source = (JSlider) e.getSource();
-            if (!source.getValueIsAdjusting()) {
-                System.out.println(source.getValue());
+            //if (!source.getValueIsAdjusting()) {
                 model.setTimeLineState(source.getValue());
                 model.setTimeLineAction(true);
-            }
+           // }
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
             JButton source = (JButton) e.getSource();
             if (source.equals(playButton)) {
-                System.out.println("Play pressed");
                 timeLine.setValue(0);
                 playButton.setEnabled(false);
-                System.out.println("play disabled");
                 model.playAnimation();
             } else if (source.equals(startButton)) {
-                System.out.println("Start pressed");
                 timeLine.setValue(0);
             } else if (source.equals(endButton)) {
-                System.out.println("End pressed");
                 timeLine.setValue(timeLine.getMaximum());
             }
         }

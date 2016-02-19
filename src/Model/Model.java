@@ -27,6 +27,9 @@ public class Model extends Observable {
     private Timer animationTimer;
     private boolean animate = false;
     private int strokeThicknes = 1;
+    private ArrayList<Integer> strokeLengths = new ArrayList<>();
+    private int globalStrokeLength = 0;
+    private int maxStroke = 0;
 
     public Model () {
         super.setChanged();
@@ -40,22 +43,27 @@ public class Model extends Observable {
 
     public void drawPoints(int x, int y) {
         if (draw) {
-            if (x == y && x == -1) {
-                newStroke = true;
-            }
             Coordinate pos = new Coordinate(x, y, selectedColor, strokeThicknes);
             drawingCoords.add(pos);
-            if (currentX != -1) {
-                prevX = currentX;
-            }
-            if (currentY != -1) {
-                prevY = currentY;
-            }
-            currentX = x;
-            currentY = y;
-            if (prevX != -1) {
-                setChanged();
-                notifyViews();
+            if (x == y && x == -1) {
+                newStroke = true;
+                strokeLengths.add(globalStrokeLength);
+                globalStrokeLength = 0;
+
+            } else {
+                globalStrokeLength++;
+                if (currentX != -1) {
+                    prevX = currentX;
+                }
+                if (currentY != -1) {
+                    prevY = currentY;
+                }
+                currentX = x;
+                currentY = y;
+                if (prevX != -1) {
+                    setChanged();
+                    notifyViews();
+                }
             }
         }
     }
@@ -66,17 +74,15 @@ public class Model extends Observable {
         strokeCount = 0;
         setTimeLineState(0);
         ActionListener timeLineAnimation = e->animate(tempStrokeCount);
-        animationTimer = new Timer(500,timeLineAnimation);
+        animationTimer = new Timer(1000/(strokeLengths.size() - globalStrokeLength),timeLineAnimation);
         animationTimer.start();
-        System.out.println("Animation done");
     }
 
     private void animate (int maxStroke) {
-        System.out.println("Enter Animate");
-        setTimeLineState(strokeCount * GlobalConstants.TIMELINE_SPACING);
+        setTimeLineState(timeLineState + 1);
         setTimeLineAction(true);
         if (strokeCount < maxStroke) {
-            strokeCount++;
+            strokeCount = timeLineState / GlobalConstants.TIMELINE_SPACING;
         } else {
             animate = false;
             animationTimer.stop();
@@ -145,6 +151,7 @@ public class Model extends Observable {
 
     public void setStrokeCount(int count) {
         strokeCount = count;
+        maxStroke = strokeCount;
     }
 
 
@@ -190,5 +197,24 @@ public class Model extends Observable {
     public void setStrokeThicknes(int strokeThicknes) {
         this.strokeThicknes = strokeThicknes;
     }
+
+
+    public int getMaxStroke() {
+        return maxStroke;
+    }
+
+    public void setMaxStroke(int maxStroke) {
+        this.maxStroke = maxStroke;
+    }
+
+
+    public ArrayList<Integer> getStrokeLengths() {
+        return strokeLengths;
+    }
+
+    public void setStrokeLengths(ArrayList<Integer> strokeLengths) {
+        this.strokeLengths = strokeLengths;
+    }
+
 
 }

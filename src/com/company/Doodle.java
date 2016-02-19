@@ -31,8 +31,9 @@ class Doodle {
         TimeSlider playBack = new TimeSlider(model);
         DrawingCanvas canvas = new DrawingCanvas(model);
 
-        model.addObserver(playBack);
+
         model.addObserver(canvas);
+        model.addObserver(playBack);
         model.notifyObservers();
 
         // Setup the views

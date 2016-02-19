@@ -6,11 +6,12 @@
 package Model;
 
 import java.awt.*;
+import java.io.Serializable;
 
 /**
  * Created by Akash-Mac on 2016-02-17.
  */
-public class Coordinate {
+public class Coordinate implements Serializable {
     private final int key;
     private final int value;
     private final Color color;

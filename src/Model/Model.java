@@ -5,13 +5,14 @@ import Misc.GlobalConstants;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Observable;
 
 /**
  * Created by Akash-Mac on 2016-02-17.
  */
-public class Model extends Observable {
+public class Model extends Observable implements Serializable {
     // Variable declarations
     private int prevX = -1;
     private int prevY = -1;
@@ -31,11 +32,11 @@ public class Model extends Observable {
     private int globalStrokeLength = 0;
     private int maxStroke = 0;
 
-    public Model () {
+    public Model() {
         super.setChanged();
     }
 
-    private void notifyViews () {
+    private void notifyViews() {
         if (draw || timeLineAction) {
             notifyObservers();
         }
@@ -73,12 +74,12 @@ public class Model extends Observable {
         animate = true;
         strokeCount = 0;
         setTimeLineState(0);
-        ActionListener timeLineAnimation = e->animate(tempStrokeCount);
-        animationTimer = new Timer(1000/(strokeLengths.size() - globalStrokeLength),timeLineAnimation);
+        ActionListener timeLineAnimation = e -> animate(tempStrokeCount);
+        animationTimer = new Timer(1000 / (strokeLengths.size() - globalStrokeLength), timeLineAnimation);
         animationTimer.start();
     }
 
-    private void animate (int maxStroke) {
+    private void animate(int maxStroke) {
         setTimeLineState(timeLineState + 1);
         setTimeLineAction(true);
         if (strokeCount < maxStroke) {
@@ -86,6 +87,46 @@ public class Model extends Observable {
         } else {
             animate = false;
             animationTimer.stop();
+        }
+    }
+
+    public void saveFile(String filePath) {
+        try {
+            FileOutputStream fOut = new FileOutputStream(filePath);
+            ObjectOutputStream objOut = new ObjectOutputStream(fOut);
+            objOut.writeObject(this);
+
+        } catch (IOException ex) {
+            System.err.println("File not found: " + filePath);
+        }
+    }
+
+    public void loadFile (String filePath) {
+        Model readData;
+        try {
+            FileInputStream fIn = new FileInputStream(filePath);
+            ObjectInputStream objIn = new ObjectInputStream(fIn);
+            try {
+                Object readObject = objIn.readObject();
+                if (readObject instanceof Model) {
+                    readData = (Model) readObject;
+                    this.drawingCoords = readData.getDrawingCoords();
+                    this.draw = readData.getDraw();
+                    this.timeLineAction = readData.isTimeLineAction();
+                    this.timeLineState = readData.getTimeLineState();
+                    this.strokeCount = readData.getStrokeCount();
+                    this.maxStroke = readData.getMaxStroke();
+                    this.strokeThicknes = readData.getStrokeThicknes();
+                    this.selectedColor = readData.getSelectedColor();
+                    this.strokeLengths = readData.getStrokeLengths();
+                    setChanged();
+                    notifyViews();
+                }
+            } catch (ClassNotFoundException ex) {
+                System.err.println("This file may not be supported by the application: " + filePath);
+            }
+        } catch (IOException ex) {
+            System.err.println("File not found: " + filePath);
         }
     }
 

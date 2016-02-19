@@ -26,7 +26,7 @@ class Doodle {
         Model model = new Model();
 
         // Defining all the views
-        MenuView menu = new MenuView();
+        MenuView menu = new MenuView(model);
         ToolsPanel tools = new ToolsPanel(model);
         TimeSlider playBack = new TimeSlider(model);
         DrawingCanvas canvas = new DrawingCanvas(model);

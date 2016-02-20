@@ -115,7 +115,7 @@ public class DrawingCanvas extends JPanel implements Observer {
 
         @Override
         public void mouseDragged(MouseEvent e) {
-            if (model.isNewStroke()) {
+            if (model.isNewStroke() && !model.isAnimate()) {
                 int count = model.getStrokeCount() + 1;
                 model.setStrokeCount(count);
                 model.setNewStroke(false);
@@ -126,12 +126,14 @@ public class DrawingCanvas extends JPanel implements Observer {
 
         @Override
         public void mouseReleased(MouseEvent e) {
-            model.drawPoints(-1, -1);
-            model.setDraw(false);
-            model.setPrevX(-1);
-            model.setPrevY(-1);
-            model.setCurrentX(-1);
-            model.setCurrentY(-1);
+            if (!model.isAnimate()) {
+                model.drawPoints(-1, -1);
+                model.setDraw(false);
+                model.setPrevX(-1);
+                model.setPrevY(-1);
+                model.setCurrentX(-1);
+                model.setCurrentY(-1);
+            }
         }
     }
 }

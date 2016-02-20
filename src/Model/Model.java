@@ -43,21 +43,26 @@ public class Model extends Observable implements Serializable {
     }
 
     public void drawPoints(int x, int y) {
-        if (draw) {
-            Coordinate pos = new Coordinate(x, y, selectedColor, strokeThicknes);
-            drawingCoords.add(pos);
+        if (draw && !animate) {
             if (x == y && x == -1) {
                 newStroke = true;
-                strokeLengths.add(globalStrokeLength);
-                globalStrokeLength = 0;
-
-            } else {
-                globalStrokeLength++;
-                if (currentX != -1) {
-                    prevX = currentX;
+                if (globalStrokeLength > 0) {
+                    strokeLengths.add(globalStrokeLength);
                 }
-                if (currentY != -1) {
+                globalStrokeLength = 0;
+                currentX = -1;
+                currentY = -1;
+                if (prevX != -1 && prevY != -1 && maxStroke > 0) {
+                    Coordinate pos = new Coordinate(currentX, currentY, selectedColor, strokeThicknes);
+                    drawingCoords.add(pos);
+                }
+            } else {
+                if (currentX != -1 && currentY != -1) {
+                    prevX = currentX;
                     prevY = currentY;
+                    Coordinate pos = new Coordinate(prevX, prevY, selectedColor, strokeThicknes);
+                    drawingCoords.add(pos);
+                    globalStrokeLength++;
                 }
                 currentX = x;
                 currentY = y;
@@ -90,7 +95,7 @@ public class Model extends Observable implements Serializable {
         }
     }
 
-    public void saveFile(String filePath) {
+    public void saveFile (String filePath) {
         try {
             FileOutputStream fOut = new FileOutputStream(filePath);
             ObjectOutputStream objOut = new ObjectOutputStream(fOut);
@@ -101,7 +106,43 @@ public class Model extends Observable implements Serializable {
         }
     }
 
+    public void saveToTextFile (String filePath) {
+        try {
+            FileWriter writer = new FileWriter(filePath);
+            BufferedWriter bufferedWriter = new BufferedWriter(writer);
+            bufferedWriter.write(this.toString());
+            bufferedWriter.close();
+        } catch (IOException ex) {
+            System.err.println("File save was unsuccessful.");
+        }
+    }
+
     public void loadFile (String filePath) {
+        try {
+            FileInputStream inputStream = new FileInputStream(filePath);
+            byte[] lookAhead = new byte[GlobalConstants.BYTE_LOOKAHEAD];
+            inputStream.read(lookAhead, 0, lookAhead.length);
+            int binaryByteCount = 0;
+            for (byte curr : lookAhead) {
+                // Mark as binary file if chars are non asci and not newline
+                if ((curr < 32 || curr > 127) && curr != 10) {
+                    binaryByteCount ++;
+                }
+            }
+            inputStream.close();
+            // If 10% binary, then its a binary file - should be ~0% for text file
+            double binRatio = (binaryByteCount*100) / GlobalConstants.BYTE_LOOKAHEAD;
+            if (binRatio > 10) {
+                loadBinaryFile(filePath);
+            } else {
+                loadTextFile(filePath);
+            }
+        } catch (IOException ex) {
+            System.err.println("Could not determine file type: " + filePath);
+        }
+    }
+
+    private void loadBinaryFile (String filePath) {
         Model readData;
         try {
             FileInputStream fIn = new FileInputStream(filePath);
@@ -116,8 +157,6 @@ public class Model extends Observable implements Serializable {
                     this.timeLineState = readData.getTimeLineState();
                     this.strokeCount = readData.getStrokeCount();
                     this.maxStroke = readData.getMaxStroke();
-                    this.strokeThicknes = readData.getStrokeThicknes();
-                    this.selectedColor = readData.getSelectedColor();
                     this.strokeLengths = readData.getStrokeLengths();
                     setChanged();
                     notifyViews();
@@ -130,28 +169,76 @@ public class Model extends Observable implements Serializable {
         }
     }
 
-    public int getPrevX() {
-        return prevX;
+    private void loadTextFile (String filePath) {
+        try {
+            // Attributes to be read
+            drawingCoords = new ArrayList<>();
+            strokeLengths = new ArrayList<>();
+            FileInputStream fIn = new FileInputStream(filePath);
+            InputStreamReader iStream = new InputStreamReader(fIn);
+            BufferedReader bufferedReader = new BufferedReader(iStream);
+            String line;
+            String[] dataArray;
+            int numLines = Integer.parseInt(bufferedReader.readLine());
+            while (numLines > 0) {
+                line = bufferedReader.readLine();
+                if (!line.isEmpty()) {
+                    dataArray = line.split(" ");
+                    int key = Integer.parseInt(dataArray[0]);
+                    int value = Integer.parseInt(dataArray[1]);
+                    Color color = new Color(Integer.parseInt(dataArray[2]));
+                    int thickness = Integer.parseInt(dataArray[3]);
+                    Coordinate toAdd = new Coordinate(key, value, color, thickness);
+                    drawingCoords.add(toAdd);
+                    numLines--;
+                }
+            }
+            numLines = Integer.parseInt(bufferedReader.readLine());
+            while (numLines > 0) {
+                line = bufferedReader.readLine();
+                if (!line.isEmpty()) {
+                    strokeLengths.add(Integer.parseInt(line));
+                    numLines--;
+                }
+            }
+            draw = Boolean.valueOf(bufferedReader.readLine());
+            timeLineAction = Boolean.valueOf(bufferedReader.readLine());
+            timeLineState = Integer.parseInt(bufferedReader.readLine());
+            strokeCount = Integer.parseInt(bufferedReader.readLine());
+            maxStroke = Integer.parseInt(bufferedReader.readLine());
+            setChanged();
+            notifyViews();
+
+        } catch (IOException ex) {
+            System.out.println("This file may not be supported by the application: " + filePath);
+        }
+    }
+
+    @Override
+    public String toString() {
+        String toRet = this.drawingCoords.size() + "\n";
+        // Convert the arraylist to string
+        for (Coordinate c : drawingCoords) {
+            toRet += c;
+        }
+        toRet += this.strokeLengths.size() + "\n";
+        for (int l : strokeLengths) {
+            toRet += String.valueOf(l) + "\n";
+        }
+        toRet += this.draw + "\n"
+                + this.timeLineAction + "\n"
+                + this.timeLineState + "\n"
+                + this.strokeCount + "\n"
+                + this.maxStroke;
+        return toRet;
     }
 
     public void setPrevX(int prevX) {
         this.prevX = prevX;
     }
 
-    public int getPrevY() {
-        return prevY;
-    }
-
     public void setPrevY(int prevY) {
         this.prevY = prevY;
-    }
-
-    public int getCurrentX() {
-        return currentX;
-    }
-
-    public int getCurrentY() {
-        return currentY;
     }
 
 
@@ -175,11 +262,6 @@ public class Model extends Observable implements Serializable {
 
     public void setCurrentX(int currentX) {
         this.currentX = currentX;
-    }
-
-
-    public Color getSelectedColor() {
-        return selectedColor;
     }
 
     public void setSelectedColor(Color selectedColor) {
@@ -226,15 +308,6 @@ public class Model extends Observable implements Serializable {
         return animate;
     }
 
-    public void setAnimate(boolean animate) {
-        this.animate = animate;
-    }
-
-
-    public int getStrokeThicknes() {
-        return strokeThicknes;
-    }
-
     public void setStrokeThicknes(int strokeThicknes) {
         this.strokeThicknes = strokeThicknes;
     }
@@ -244,17 +317,8 @@ public class Model extends Observable implements Serializable {
         return maxStroke;
     }
 
-    public void setMaxStroke(int maxStroke) {
-        this.maxStroke = maxStroke;
-    }
-
-
     public ArrayList<Integer> getStrokeLengths() {
         return strokeLengths;
-    }
-
-    public void setStrokeLengths(ArrayList<Integer> strokeLengths) {
-        this.strokeLengths = strokeLengths;
     }
 
 

@@ -30,8 +30,6 @@ public class SplashScreen extends JWindow {
         ));
         //ImageIcon img = new ImageIcon(scaledImg);
         JLabel bcgImg = new JLabel(img);
-        //JLabel displayInfo = new JLabel("<html>" + NAME + name + "<br>" + USER_ID + userId + "<br>" +
-        //        STUDENT_NUMBER + studentNumber + "<br>" + DESCRIPTION + description + "</html>");
         // Set the container content
         super.add(bcgImg, BorderLayout.CENTER);
         //super.add(displayInfo, BorderLayout.SOUTH);

@@ -24,6 +24,11 @@ public class Coordinate implements Serializable {
         strokeThickness = _thickness;
     }
 
+    @Override
+    public String toString() {
+        return key + " " + value + " " + String.valueOf(color.getRGB()) + " " + strokeThickness + "\n";
+    }
+
     public int key()   { return key; }
     public int value() { return value; }
     public Color color() { return color; }

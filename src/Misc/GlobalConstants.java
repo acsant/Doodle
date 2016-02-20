@@ -25,8 +25,13 @@ public class GlobalConstants {
     public static final String SAVE_TEXT = "Save";
     public static final String LOAD_TEXT = "Load";
     public static final String PLAY_BUTTON = "Play";
+    public static final String FULL_SIZE_TEXT = "Full-Size";
+    public static final String TXT_SAVE_TEXT = "TXT";
+    public static final String BIN_SAVE_TEXT = "BIN";
+    public static final String FIT_SCREEN_TEXT = "Fit";
     public static final int TIMELINE_SPACING = 10;
     public static final int COLOR_SWATCH_DIM = 15;
+    public static final int BYTE_LOOKAHEAD = 100;
     public static final Dimension STROKE_BUTTON_DIM = new Dimension(80, 25);
     public static final String STROKE_PALETTE_NAME = "Thickness";
     public static final String RESOURCES_PATH = "/Resources/";

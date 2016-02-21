@@ -7,3 +7,5 @@
 - Fit Screen
 - Dynamic Layout
 - Keyboard Mnemonics
+- Update canvas dimensions
+- Color chooser

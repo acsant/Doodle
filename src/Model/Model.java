@@ -31,13 +31,14 @@ public class Model extends Observable implements Serializable {
     private ArrayList<Integer> strokeLengths = new ArrayList<>();
     private int globalStrokeLength = 0;
     private int maxStroke = 0;
+    private boolean reset = false;
 
     public Model() {
         super.setChanged();
     }
 
     private void notifyViews() {
-        if (draw || timeLineAction) {
+        if (draw || timeLineAction || reset) {
             notifyObservers();
         }
     }
@@ -80,7 +81,7 @@ public class Model extends Observable implements Serializable {
         strokeCount = 0;
         setTimeLineState(0);
         ActionListener timeLineAnimation = e -> animate(tempStrokeCount);
-        animationTimer = new Timer(1000 / (strokeLengths.size() - globalStrokeLength), timeLineAnimation);
+        animationTimer = new Timer(1000 / (maxStroke * GlobalConstants.TIMELINE_SPACING), timeLineAnimation);
         animationTimer.start();
     }
 
@@ -233,6 +234,28 @@ public class Model extends Observable implements Serializable {
         return toRet;
     }
 
+    public void reset() {
+        prevX = -1;
+        prevY = -1;
+        currentX = -1;
+        currentY = -1;
+        draw = false;
+        drawingCoords = new ArrayList<>();
+        strokeCount = 0;
+        timeLineAction = false;
+        timeLineState = 0;
+        newStroke = true;
+        animate = false;
+        strokeThicknes = 1;
+        strokeLengths = new ArrayList<>();
+        globalStrokeLength = 0;
+        maxStroke = 0;
+        reset = true;
+        setChanged();
+        notifyViews();
+        reset = false;
+    }
+
     public void setPrevX(int prevX) {
         this.prevX = prevX;
     }
@@ -286,6 +309,10 @@ public class Model extends Observable implements Serializable {
         this.timeLineAction = timeLineAction;
         setChanged();
         notifyViews();
+    }
+
+    public boolean isReset() {
+        return reset;
     }
 
     public int getTimeLineState() {

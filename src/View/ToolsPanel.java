@@ -99,7 +99,6 @@ public class ToolsPanel extends JPanel implements Observer {
         for (int i = 0; i < icons.length; i++) {
             PaletteController pc = new PaletteController(i);
             colorSwatch = new JToggleButton(icons[i], i==0);
-            colorSwatch.setName("Col");
             colorSwatch.setAlignmentX(SwingConstants.CENTER);
             colorSwatch.setAlignmentY(SwingConstants.CENTER);
             colorSwatch.setSize(new Dimension(swatchDim, swatchDim));

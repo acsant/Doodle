@@ -27,8 +27,7 @@ public class MenuView extends JMenuBar implements Observer {
     JMenuItem exit = new JMenuItem(GlobalConstants.EXIT_TEXT);
     JMenuItem txtSave = new JMenuItem(GlobalConstants.TXT_SAVE_TEXT);
     JMenuItem binSave = new JMenuItem(GlobalConstants.BIN_SAVE_TEXT);
-    JMenuItem txtLoad = new JMenuItem(GlobalConstants.TXT_SAVE_TEXT);
-    JMenuItem binLoad = new JMenuItem(GlobalConstants.BIN_SAVE_TEXT);
+    JMenuItem createnew = new JMenuItem(GlobalConstants.CREATE_NEW_TEXT);
     JMenu save = new JMenu(GlobalConstants.SAVE_TEXT);
     JMenuItem load = new JMenuItem(GlobalConstants.LOAD_TEXT);
     ButtonGroup radioGroup = new ButtonGroup();
@@ -41,6 +40,7 @@ public class MenuView extends JMenuBar implements Observer {
     final String CHECK_IMAGE = "check.png";
     final String BIN_SAVE_IMAGE = "bin_save.png";
     final String TXT_SAVE_IMAGE = "textsave.png";
+    final String CREATE_NEW_IMAGE = "createnew.png";
     ImageIcon checkIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
             ResourceManager.class.getResource(GlobalConstants.RESOURCES_PATH + CHECK_IMAGE)));
     MenuController mc = new MenuController();
@@ -60,6 +60,9 @@ public class MenuView extends JMenuBar implements Observer {
                 ResourceManager.class.getResource(GlobalConstants.RESOURCES_PATH + BIN_SAVE_IMAGE)));
         ImageIcon txtSaveIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
                 ResourceManager.class.getResource(GlobalConstants.RESOURCES_PATH + TXT_SAVE_IMAGE)));
+        ImageIcon createNewIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+                ResourceManager.class.getResource(GlobalConstants.RESOURCES_PATH + CREATE_NEW_IMAGE)));
+
         // View menu
         radioGroup.add(fullSize);
         radioGroup.add(fitScreen);
@@ -68,6 +71,8 @@ public class MenuView extends JMenuBar implements Observer {
         fullSize.addActionListener(mc);
         fitScreen.addActionListener(mc);
         // File menus
+        createnew.setIcon(createNewIcon);
+        createnew.addActionListener(mc);
         load.setIcon(loadIcon);
         load.addActionListener(mc);
         save.setIcon(saveIcon);
@@ -79,8 +84,9 @@ public class MenuView extends JMenuBar implements Observer {
         binSave.addActionListener(mc);
         exit.setIcon(exitIcon);
         exit.addActionListener(mc);
-        file.add(save);
+        file.add(createnew);
         file.add(load);
+        file.add(save);
         file.addSeparator();
         file.add(exit);
         view.add(fullSize);
@@ -102,7 +108,9 @@ public class MenuView extends JMenuBar implements Observer {
             Object obj = e.getSource();
             if (obj instanceof JMenuItem) {
                 JMenuItem item = (JMenuItem) obj;
-                if (item.equals(txtSave) || item.equals(binSave)) {
+                if (item.equals(createnew)) {
+                    model.reset();
+                } else if (item.equals(txtSave) || item.equals(binSave)) {
                     returnCode = fileChooser.showSaveDialog(MenuView.this);
                     if (returnCode == JFileChooser.APPROVE_OPTION) {
                         File toSave = fileChooser.getSelectedFile();

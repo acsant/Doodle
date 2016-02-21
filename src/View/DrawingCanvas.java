@@ -97,7 +97,6 @@ public class DrawingCanvas extends JPanel implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        System.out.println("Repaint Called");
         repaint();
     }
 

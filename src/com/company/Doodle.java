@@ -20,7 +20,11 @@ import java.awt.event.MouseEvent;
 class Doodle {
 
     Doodle () {
+
+        //Look & Fell
+
         JFrame frame = new JFrame(GlobalConstants.APPLICATION_NAME);
+        JScrollPane scrollable = new JScrollPane();
 
         // Defining a model
         Model model = new Model();
@@ -31,17 +35,20 @@ class Doodle {
         TimeSlider playBack = new TimeSlider(model);
         DrawingCanvas canvas = new DrawingCanvas(model);
 
-
         model.addObserver(canvas);
         model.addObserver(playBack);
         model.notifyObservers();
+
+        canvas.setPreferredSize(GlobalConstants.SCREEN_SIZE);
+        scrollable.setPreferredSize(GlobalConstants.MINIMUM_SCREEN_SIZE);
+        scrollable.setViewportView(canvas);
 
         // Setup the views
         frame.setLayout(new BorderLayout());
         frame.add(menu, BorderLayout.NORTH);
         frame.add(playBack, BorderLayout.SOUTH);
         frame.add(tools, BorderLayout.WEST);
-        frame.add(canvas, BorderLayout.CENTER);
+        frame.add(scrollable, BorderLayout.CENTER);
 
         frame.setMinimumSize(GlobalConstants.MINIMUM_SCREEN_SIZE);
         frame.setSize(GlobalConstants.MINIMUM_SCREEN_SIZE.width, GlobalConstants.MINIMUM_SCREEN_SIZE.height + 200);

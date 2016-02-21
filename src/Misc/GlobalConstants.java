@@ -29,6 +29,7 @@ public class GlobalConstants {
     public static final String TXT_SAVE_TEXT = "TXT";
     public static final String BIN_SAVE_TEXT = "BIN";
     public static final String FIT_SCREEN_TEXT = "Fit";
+    public static final String CREATE_NEW_TEXT = "New";
     public static final int TIMELINE_SPACING = 10;
     public static final int COLOR_SWATCH_DIM = 15;
     public static final int BYTE_LOOKAHEAD = 100;

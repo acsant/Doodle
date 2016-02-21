@@ -44,14 +44,12 @@ public class TimeSlider extends JPanel implements Observer {
                 GlobalConstants.TIMELINE_NAME);
         timeLine.setBorder(timeLineBorder);
         timeLine.setValue(0);
-        timeLine.setEnabled(false);
+        timeLine.setMinorTickSpacing(1);
         timeLine.addChangeListener(sc);
         timeLine.setMaximum(0);
-        playButton.setEnabled(false);
         playButton.addActionListener(sc);
-        startButton.setEnabled(false);
         startButton.addActionListener(sc);
-        endButton.setEnabled(false);
+        setupTimeLine(false);
         endButton.addActionListener(sc);
         super.setLayout(new BorderLayout());
         super.add(playButton, BorderLayout.WEST);
@@ -63,14 +61,11 @@ public class TimeSlider extends JPanel implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         timeLine.removeChangeListener(sc);
-        if (model.getStrokeCount() > 0) {
+        if (model.isReset()) {
+            setupTimeLine(false);
+        } else if (model.getStrokeCount() > 0) {
             int sliderVal = GlobalConstants.TIMELINE_SPACING * model.getStrokeCount();
-            playButton.setEnabled(true);
-            startButton.setEnabled(true);
-            endButton.setEnabled(true);
-            timeLine.setEnabled(true);
-            timeLine.setPaintTicks(true);
-            timeLine.setPaintLabels(true);
+            setupTimeLine(true);
             if (model.isAnimate() || timeLine.getMaximum() < sliderVal) {
                 if (timeLine.getMaximum() < sliderVal) {
                     timeLine.setMaximum(sliderVal);
@@ -85,8 +80,16 @@ public class TimeSlider extends JPanel implements Observer {
             timeLine.setMajorTickSpacing(GlobalConstants.TIMELINE_SPACING);
         }
         timeLine.setValue(model.getTimeLineState());
-        System.out.println(model.getTimeLineState());
         timeLine.addChangeListener(sc);
+    }
+
+    private void setupTimeLine(boolean setup) {
+        timeLine.setEnabled(setup);
+        playButton.setEnabled(setup);
+        startButton.setEnabled(setup);
+        endButton.setEnabled(setup);
+        timeLine.setPaintTicks(setup);
+        timeLine.setPaintLabels(setup);
     }
 
     private class SliderController implements ChangeListener, ActionListener {

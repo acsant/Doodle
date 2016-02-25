@@ -145,8 +145,9 @@ public class Model extends Observable implements Serializable {
 
     private void loadBinaryFile (String filePath) {
         Model readData;
+        FileInputStream fIn = null;
         try {
-            FileInputStream fIn = new FileInputStream(filePath);
+            fIn = new FileInputStream(filePath);
             ObjectInputStream objIn = new ObjectInputStream(fIn);
             try {
                 Object readObject = objIn.readObject();
@@ -166,7 +167,11 @@ public class Model extends Observable implements Serializable {
                 System.err.println("This file may not be supported by the application: " + filePath);
             }
         } catch (IOException ex) {
-            System.err.println("File not found: " + filePath);
+            if (fIn == null) {
+                System.err.println("File not found: " + filePath);
+            } else {
+                System.err.println("This file may not be supported by the application: " + filePath);
+            }
         }
     }
 

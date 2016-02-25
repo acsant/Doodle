@@ -44,7 +44,6 @@ public class TimeSlider extends JPanel implements Observer {
                 GlobalConstants.TIMELINE_NAME);
         timeLine.setBorder(timeLineBorder);
         timeLine.setValue(0);
-        timeLine.setMinorTickSpacing(1);
         timeLine.addChangeListener(sc);
         timeLine.setMaximum(0);
         playButton.addActionListener(sc);

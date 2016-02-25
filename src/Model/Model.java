@@ -44,34 +44,38 @@ public class Model extends Observable implements Serializable {
     }
 
     public void drawPoints(int x, int y) {
+        globalStrokeLength++;
         if (draw && !animate) {
             if (x == y && x == -1) {
                 newStroke = true;
+                globalStrokeLength--;
                 if (globalStrokeLength > 0) {
                     strokeLengths.add(globalStrokeLength);
                 }
                 globalStrokeLength = 0;
-                currentX = -1;
-                currentY = -1;
-                if (prevX != -1 && prevY != -1 && maxStroke > 0) {
-                    Coordinate pos = new Coordinate(currentX, currentY, selectedColor, strokeThicknes);
+                //currentX = -1;
+                //currentY = -1;
+
+                //if (prevX != -1 && prevY != -1 && maxStroke > 0) {
+                //    Coordinate pos = new Coordinate(currentX, currentY, selectedColor, strokeThicknes);
+                //    drawingCoords.add(pos);
+                //}
+            } //else {
+                //if (currentX != -1 && currentY != -1) {
+                //    prevX = currentX;
+                //    prevY = currentY;
+                //    Coordinate pos = new Coordinate(prevX, prevY, selectedColor, strokeThicknes);
+                    Coordinate pos = new Coordinate(x, y, selectedColor, strokeThicknes);
                     drawingCoords.add(pos);
-                }
-            } else {
-                if (currentX != -1 && currentY != -1) {
-                    prevX = currentX;
-                    prevY = currentY;
-                    Coordinate pos = new Coordinate(prevX, prevY, selectedColor, strokeThicknes);
-                    drawingCoords.add(pos);
-                    globalStrokeLength++;
-                }
+                    //globalStrokeLength++;
+                //}
                 currentX = x;
                 currentY = y;
-                if (prevX != -1) {
+                //if (prevX != -1) {
                     setChanged();
                     notifyViews();
-                }
-            }
+                //}
+            //}
         }
     }
 

@@ -21,7 +21,7 @@ class Doodle {
 
     Doodle () {
 
-        //Look & Fell
+        //Look & Feel
 
         JFrame frame = new JFrame(GlobalConstants.APPLICATION_NAME);
         JScrollPane scrollable = new JScrollPane();

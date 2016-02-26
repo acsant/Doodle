@@ -37,7 +37,13 @@ public class ToolsPanel extends JPanel implements Observer {
     public ToolsPanel (Model _model) {
         super();
         model = _model;
-        super.setLayout(new BorderLayout());
+        super.setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.gridx = 1;
+        constraints.gridy = 0;
+        constraints.weightx = 1;
+        constraints.weighty = 1;
         // Setup the palletes
         setupColorPalette();
         model.setSelectedColor(colors[0]);
@@ -53,9 +59,7 @@ public class ToolsPanel extends JPanel implements Observer {
         vertBox.add(colorPalette);
         vertBox.add(strokePalette);
         vertBox.setVisible(true);
-        super.add(vertBox, BorderLayout.NORTH);
-
-        //super.add(strokeBoxLayout, BorderLayout.SOUTH);
+        super.add(vertBox, constraints);
         super.setVisible(true);
     }
 
@@ -77,7 +81,7 @@ public class ToolsPanel extends JPanel implements Observer {
         for (int i = 0; i < strokeIcons.length; i++) {
             StrokeController sc = new StrokeController(i);
             strokeButton = new JToggleButton(strokeIcons[i], i==0);
-            strokeButton.setSize(GlobalConstants.STROKE_BUTTON_DIM.width, GlobalConstants.STROKE_BUTTON_DIM.height);
+            //strokeButton.setSize(GlobalConstants.STROKE_BUTTON_DIM.width, GlobalConstants.STROKE_BUTTON_DIM.height);
             strokeButton.setBorderPainted(true);
             strokeButton.setOpaque(true);
             strokeButton.addItemListener(sc);
@@ -101,8 +105,10 @@ public class ToolsPanel extends JPanel implements Observer {
             colorSwatch = new JToggleButton(icons[i], i==0);
             colorSwatch.setAlignmentX(SwingConstants.CENTER);
             colorSwatch.setAlignmentY(SwingConstants.CENTER);
-            colorSwatch.setSize(new Dimension(swatchDim, swatchDim));
-            colorSwatch.setBorderPainted(true);
+            colorSwatch.setMaximumSize(new Dimension(swatchDim, swatchDim));
+            colorSwatch.setBackground(colors[i]);
+            colorSwatch.setForeground(colors[i]);
+            colorSwatch.setBorderPainted(false);
             colorSwatch.setOpaque(true);
             colorSwatch.addItemListener(pc);
             colorGroup.add(colorSwatch);
@@ -111,8 +117,14 @@ public class ToolsPanel extends JPanel implements Observer {
     }
 
     @Override
-    public void update(Observable o, Object arg) {
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        model.setColorPaletteDim(super.getSize());
+    }
 
+    @Override
+    public void update(Observable o, Object arg) {
+        repaint();
     }
 
     private class PaletteController implements ItemListener {
@@ -125,8 +137,11 @@ public class ToolsPanel extends JPanel implements Observer {
 
         @Override
         public void itemStateChanged(ItemEvent e) {
+            JToggleButton source = (JToggleButton) e.getSource();
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 model.setSelectedColor(colors[index]);
+                EtchedBorder border = new EtchedBorder(EtchedBorder.LOWERED);
+                source.setBorder(border);
             }
         }
     }

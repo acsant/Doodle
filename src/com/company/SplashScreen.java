@@ -23,7 +23,7 @@ public class SplashScreen extends JWindow {
     public SplashScreen (String name, String userId, String studentNumber, String description, Dimension SCREEN_SIZE) {
         // Variable Declaration
         int width = GlobalConstants.MINIMUM_SCREEN_SIZE.width;
-        int height = GlobalConstants.MINIMUM_SCREEN_SIZE.height;
+        int height = GlobalConstants.MINIMUM_SCREEN_SIZE.height - 200;
         //JPanel container = (JPanel) getContentPane();
         ImageIcon img = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
                 (ResourceManager.class.getResource(splash_file))
@@ -36,7 +36,6 @@ public class SplashScreen extends JWindow {
         super.setName("Doodle");
         setSize(width, height);
         setLocation((SCREEN_SIZE.width - getWidth()) / 2, (SCREEN_SIZE.height - getHeight()) / 2);
-
         setVisible(true);
     }
 

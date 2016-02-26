@@ -14,24 +14,37 @@ import java.util.Observable;
  */
 public class Model extends Observable implements Serializable {
     // Variable declarations
+    // Keeps track of current drawing piints
     private int prevX = -1;
     private int prevY = -1;
     private int currentX = -1;
     private int currentY = -1;
+
+    // Model States
     private boolean draw = false;
+    private boolean timeLineAction = false;
+    private boolean animate = false;
+    private boolean newStroke = true;
+    private boolean reset = false;
+    private boolean drawIsFit = false;
+
+    // Model variables to save data
     private ArrayList<Coordinate> drawingCoords = new ArrayList<>();
     private Color selectedColor = Color.WHITE;
     private int strokeCount = 0;
-    private boolean timeLineAction = false;
     private int timeLineState = -1;
-    private boolean newStroke = true;
     private Timer animationTimer;
-    private boolean animate = false;
     private int strokeThicknes = 1;
     private ArrayList<Integer> strokeLengths = new ArrayList<>();
     private int globalStrokeLength = 0;
     private int maxStroke = 0;
-    private boolean reset = false;
+
+    // Dynamic screen sizing
+    private Dimension canvasSize = null;
+    public double screenRatioX = 1;
+    public double screenRatioY = 1;
+    private Dimension timerSize = null;
+    private Dimension colorPaletteDim = null;
 
     public Model() {
         super.setChanged();
@@ -53,29 +66,14 @@ public class Model extends Observable implements Serializable {
                     strokeLengths.add(globalStrokeLength);
                 }
                 globalStrokeLength = 0;
-                //currentX = -1;
-                //currentY = -1;
+            }
+            Coordinate pos = new Coordinate(x, y, selectedColor, strokeThicknes);
+            drawingCoords.add(pos);
 
-                //if (prevX != -1 && prevY != -1 && maxStroke > 0) {
-                //    Coordinate pos = new Coordinate(currentX, currentY, selectedColor, strokeThicknes);
-                //    drawingCoords.add(pos);
-                //}
-            } //else {
-                //if (currentX != -1 && currentY != -1) {
-                //    prevX = currentX;
-                //    prevY = currentY;
-                //    Coordinate pos = new Coordinate(prevX, prevY, selectedColor, strokeThicknes);
-                    Coordinate pos = new Coordinate(x, y, selectedColor, strokeThicknes);
-                    drawingCoords.add(pos);
-                    //globalStrokeLength++;
-                //}
-                currentX = x;
-                currentY = y;
-                //if (prevX != -1) {
-                    setChanged();
-                    notifyViews();
-                //}
-            //}
+            currentX = x;
+            currentY = y;
+            setChanged();
+            notifyViews();
         }
     }
 
@@ -85,8 +83,10 @@ public class Model extends Observable implements Serializable {
         strokeCount = 0;
         setTimeLineState(0);
         ActionListener timeLineAnimation = e -> animate(tempStrokeCount);
-        animationTimer = new Timer(1000 / (maxStroke * GlobalConstants.TIMELINE_SPACING), timeLineAnimation);
-        animationTimer.start();
+        synchronized (this) {
+            animationTimer = new Timer(1000 / (maxStroke * GlobalConstants.TIMELINE_SPACING), timeLineAnimation);
+            animationTimer.start();
+        }
     }
 
     private void animate(int maxStroke) {
@@ -220,7 +220,7 @@ public class Model extends Observable implements Serializable {
             notifyViews();
 
         } catch (IOException ex) {
-            System.out.println("This file may not be supported by the application: " + filePath);
+            System.err.println("This file may not be supported by the application: " + filePath);
         }
     }
 
@@ -356,6 +356,48 @@ public class Model extends Observable implements Serializable {
     public ArrayList<Integer> getStrokeLengths() {
         return strokeLengths;
     }
+
+
+    public boolean isDrawIsFit() {
+        return drawIsFit;
+    }
+
+    public void setDrawIsFit(boolean drawIsFit) {
+        this.drawIsFit = drawIsFit;
+        setChanged();
+        notifyViews();
+    }
+
+    public void setCanvasSize(Dimension _screenSize) {
+        if (canvasSize != null) {
+            screenRatioX = canvasSize.width / _screenSize.width;
+            screenRatioY = canvasSize.height / _screenSize.height;
+        }
+        canvasSize = _screenSize;
+    }
+
+    public Dimension getCanvasSize() {
+        return canvasSize;
+    }
+
+
+    public Dimension getTimerSize() {
+        return timerSize;
+    }
+
+    public void setTimerSize(Dimension timerSize) {
+        this.timerSize = timerSize;
+    }
+
+    public Dimension getColorPaletteDim() {
+        return colorPaletteDim;
+    }
+
+    public void setColorPaletteDim(Dimension colorPaletteDim) {
+        this.colorPaletteDim = colorPaletteDim;
+    }
+
+
 
 
 }

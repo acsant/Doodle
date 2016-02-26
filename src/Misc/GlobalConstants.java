@@ -10,7 +10,8 @@ import java.util.List;
 public class GlobalConstants {
     public static final String APPLICATION_NAME = "Doodle";
     public static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
-    public static final Dimension MINIMUM_SCREEN_SIZE = new Dimension(SCREEN_SIZE.width/2, SCREEN_SIZE.height/2);
+    public static final Dimension DEFAULT_CANVAS_SIZE = new Dimension(800, 600);
+    public static final Dimension MINIMUM_SCREEN_SIZE = new Dimension(SCREEN_SIZE.width/2, (SCREEN_SIZE.height/2) + 200);
     public static final String FILE_MENU = "File";
     public static final String VIEW_MENU = "View";
     public static final String NAME = "Akash Sant";

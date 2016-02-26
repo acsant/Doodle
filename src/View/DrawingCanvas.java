@@ -12,8 +12,7 @@ import Model.Model;
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -41,6 +40,9 @@ public class DrawingCanvas extends JPanel implements Observer {
         super.paintComponent(g);
         Graphics2D graphics2D = (Graphics2D) g;
         graphics2D.setStroke(new BasicStroke(2));
+
+        // Screen sizing
+
         // Anti-aliasing, looks nicer
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
@@ -53,6 +55,7 @@ public class DrawingCanvas extends JPanel implements Observer {
         int currStroke = 0;
         int lastRatio = model.getTimeLineState() - (strokes*GlobalConstants.TIMELINE_SPACING);
         int lastPoint = -1;
+
         if (model.getTimeLineState() % GlobalConstants.TIMELINE_SPACING != 0) {
             strokes++;
         }
@@ -85,7 +88,7 @@ public class DrawingCanvas extends JPanel implements Observer {
                 prevY = pos.value();
                 if (model.getStrokeLengths().size() > currStroke && model.getStrokeLengths().get(currStroke) == 1) {
                     // Draw a point and exit
-                    graphics2D.drawOval(pos.key(), pos.value(), pos.strokeThickness(), pos.strokeThickness());
+                    graphics2D.fillOval(pos.key(), pos.value(), pos.strokeThickness(), pos.strokeThickness());
                 }
             } else {
                 if (pos.key() != -1) {
@@ -116,23 +119,13 @@ public class DrawingCanvas extends JPanel implements Observer {
         @Override
         public void mousePressed(MouseEvent e) {
             model.setDraw(true);
-            if (model.isNewStroke() && !model.isAnimate()) {
-                int count = model.getStrokeCount() + 1;
-                model.setStrokeCount(count);
-                model.setNewStroke(false);
-                model.setTimeLineState(count * GlobalConstants.TIMELINE_SPACING);
-            }
+            strokeInit();
             model.drawPoints(e.getX(), e.getY());
         }
 
         @Override
         public void mouseDragged(MouseEvent e) {
-            if (model.isNewStroke() && !model.isAnimate()) {
-                int count = model.getStrokeCount() + 1;
-                model.setStrokeCount(count);
-                model.setNewStroke(false);
-                model.setTimeLineState(count * GlobalConstants.TIMELINE_SPACING);
-            }
+            strokeInit();
             model.drawPoints(e.getX(), e.getY());
         }
 
@@ -146,6 +139,15 @@ public class DrawingCanvas extends JPanel implements Observer {
             model.setCurrentX(-1);
             model.setCurrentY(-1);
             //}
+        }
+
+        private void strokeInit() {
+            if (model.isNewStroke() && !model.isAnimate()) {
+                int count = model.getStrokeCount() + 1;
+                model.setStrokeCount(count);
+                model.setNewStroke(false);
+                model.setTimeLineState(count * GlobalConstants.TIMELINE_SPACING);
+            }
         }
     }
 }

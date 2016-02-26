@@ -7,6 +7,7 @@ package View;
 
 import Misc.GlobalConstants;
 import Model.Model;
+import sun.net.ResourceManager;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -29,9 +30,18 @@ public class TimeSlider extends JPanel implements Observer {
     TitledBorder timeLineBorder;
     SliderController sc = new SliderController();
     Box buttonBox = Box.createHorizontalBox();
-    JButton startButton = new JButton(GlobalConstants.START_BUTTON);
-    JButton endButton = new JButton(GlobalConstants.END_BUTTON);
-    JButton playButton = new JButton(GlobalConstants.PLAY_BUTTON);
+    JButton startButton = new JButton();
+    JButton endButton = new JButton();
+    JButton playButton = new JButton();
+    final String PLAY = "play.png";
+    final String START = "rewind.png";
+    final String END = "forward.png";
+    ImageIcon playIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+            ResourceManager.class.getResource(GlobalConstants.RESOURCES_PATH + PLAY)));
+    ImageIcon rewindIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+            ResourceManager.class.getResource(GlobalConstants.RESOURCES_PATH + START)));
+    ImageIcon forwardIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+            ResourceManager.class.getResource(GlobalConstants.RESOURCES_PATH + END)));
 
     // Initializing Time Slider
     public TimeSlider (Model _model) {
@@ -39,6 +49,9 @@ public class TimeSlider extends JPanel implements Observer {
         model = _model;
         buttonBox.add(startButton);
         buttonBox.add(endButton);
+        playButton.setIcon(playIcon);
+        startButton.setIcon(rewindIcon);
+        endButton.setIcon(forwardIcon);
         timeLine = new JSlider(JSlider.HORIZONTAL);
         timeLineBorder = BorderFactory.createTitledBorder(new EtchedBorder(Color.BLACK,Color.BLACK),
                 GlobalConstants.TIMELINE_NAME);
@@ -55,6 +68,12 @@ public class TimeSlider extends JPanel implements Observer {
         super.add(buttonBox, BorderLayout.EAST);
         super.add(timeLine, BorderLayout.CENTER);
         super.setVisible(true);
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        model.setTimerSize(super.getSize());
     }
 
     @Override
@@ -80,6 +99,7 @@ public class TimeSlider extends JPanel implements Observer {
         }
         timeLine.setValue(model.getTimeLineState());
         timeLine.addChangeListener(sc);
+        repaint();
     }
 
     private void setupTimeLine(boolean setup) {

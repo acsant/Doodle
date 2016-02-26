@@ -31,8 +31,8 @@ public class MenuView extends JMenuBar implements Observer {
     JMenu save = new JMenu(GlobalConstants.SAVE_TEXT);
     JMenuItem load = new JMenuItem(GlobalConstants.LOAD_TEXT);
     ButtonGroup radioGroup = new ButtonGroup();
-    JRadioButton fullSize = new JRadioButton(GlobalConstants.FULL_SIZE_TEXT, null);
-    JRadioButton fitScreen = new JRadioButton(GlobalConstants.FIT_SCREEN_TEXT);
+    JMenuItem fullSize = new JMenuItem(GlobalConstants.FULL_SIZE_TEXT, null);
+    JMenuItem fitScreen = new JMenuItem(GlobalConstants.FIT_SCREEN_TEXT, null);
     JFileChooser fileChooser = new JFileChooser();
     final String EXIT_IMAGE = "exit.png";
     final String SAVE_IMAGE = "save.png";
@@ -70,6 +70,8 @@ public class MenuView extends JMenuBar implements Observer {
         fullSize.setIcon(checkIcon);
         fullSize.addActionListener(mc);
         fitScreen.addActionListener(mc);
+        fitScreen.setHorizontalTextPosition(SwingConstants.LEFT);
+        fullSize.setHorizontalTextPosition(SwingConstants.LEFT);
         // File menus
         createnew.setIcon(createNewIcon);
         createnew.addActionListener(mc);
@@ -132,15 +134,14 @@ public class MenuView extends JMenuBar implements Observer {
                     }
                 } else if (item.equals(exit)) {
                     System.exit(0);
-                }
-            } else if (obj instanceof JRadioButton) {
-                JRadioButton selected = (JRadioButton) e.getSource();
-                if (selected.equals(fullSize)) {
+                } else if (item.equals(fullSize)) {
                     fullSize.setIcon(checkIcon);
                     fitScreen.setIcon(null);
-                } else if (selected.equals(fitScreen)) {
+                    model.setDrawIsFit(false);
+                } else if (item.equals(fitScreen)) {
                     fitScreen.setIcon(checkIcon);
                     fullSize.setIcon(null);
+                    model.setDrawIsFit(true);
                 }
             }
         }

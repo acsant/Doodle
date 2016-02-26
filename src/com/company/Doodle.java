@@ -6,10 +6,7 @@
 package com.company;
 import Misc.GlobalConstants;
 import Model.Model;
-import View.DrawingCanvas;
-import View.MenuView;
-import View.TimeSlider;
-import View.ToolsPanel;
+import View.*;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
@@ -23,8 +20,17 @@ class Doodle {
 
         //Look & Feel
 
+        try {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (Exception ex) {
+            System.err.println("This try catch code since the following not found: CrossPlatformLookAndFeel");
+        }
+        // Create the main window
         JFrame frame = new JFrame(GlobalConstants.APPLICATION_NAME);
-        JScrollPane scrollable = new JScrollPane();
+        JPanel canvasContainer = new JPanel();
+        canvasContainer.setLayout(new GridBagLayout());
+        GridBagConstraints gcons = new GridBagConstraints();
+        gcons.anchor = GridBagConstraints.CENTER;
 
         // Defining a model
         Model model = new Model();
@@ -34,14 +40,20 @@ class Doodle {
         ToolsPanel tools = new ToolsPanel(model);
         TimeSlider playBack = new TimeSlider(model);
         DrawingCanvas canvas = new DrawingCanvas(model);
+        ScrollView scrollable = new ScrollView(model);
+        canvas.setSize(GlobalConstants.DEFAULT_CANVAS_SIZE);
+        canvasContainer.add(canvas, gcons);
 
         model.addObserver(canvas);
         model.addObserver(playBack);
+        model.addObserver(scrollable);
         model.notifyObservers();
 
-        canvas.setPreferredSize(GlobalConstants.SCREEN_SIZE);
-        scrollable.setPreferredSize(GlobalConstants.MINIMUM_SCREEN_SIZE);
-        scrollable.setViewportView(canvas);
+        frame.setSize(GlobalConstants.SCREEN_SIZE);
+        canvas.setPreferredSize(GlobalConstants.DEFAULT_CANVAS_SIZE);
+        canvas.setSize(GlobalConstants.DEFAULT_CANVAS_SIZE);
+        scrollable.setViewportView(canvasContainer);
+
 
         // Setup the views
         frame.setLayout(new BorderLayout());
@@ -51,9 +63,10 @@ class Doodle {
         frame.add(scrollable, BorderLayout.CENTER);
 
         frame.setMinimumSize(GlobalConstants.MINIMUM_SCREEN_SIZE);
-        frame.setSize(GlobalConstants.MINIMUM_SCREEN_SIZE.width, GlobalConstants.MINIMUM_SCREEN_SIZE.height + 200);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // Make the frame visible
+
+        //frame.pack();
         frame.setVisible(true);
     }
 

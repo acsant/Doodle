@@ -40,11 +40,9 @@ public class Model extends Observable implements Serializable {
     private int maxStroke = 0;
 
     // Dynamic screen sizing
-    private Dimension canvasSize = null;
+    private Dimension screenSize = GlobalConstants.SCREEN_SIZE;
     public double screenRatioX = 1;
     public double screenRatioY = 1;
-    private Dimension timerSize = null;
-    private Dimension colorPaletteDim = null;
 
     public Model() {
         super.setChanged();
@@ -368,36 +366,14 @@ public class Model extends Observable implements Serializable {
         notifyViews();
     }
 
-    public void setCanvasSize(Dimension _screenSize) {
-        if (canvasSize != null) {
-            screenRatioX = canvasSize.width / _screenSize.width;
-            screenRatioY = canvasSize.height / _screenSize.height;
-        }
-        canvasSize = _screenSize;
+    public void setScreenSize (Dimension size) {
+        screenRatioX = size.getWidth() / GlobalConstants.SCREEN_SIZE.getWidth();
+        screenRatioY = size.getHeight() / GlobalConstants.SCREEN_SIZE.getHeight();
+        screenSize = size;
     }
 
-    public Dimension getCanvasSize() {
-        return canvasSize;
+    public Dimension getScreenSize () {
+        return screenSize;
     }
-
-
-    public Dimension getTimerSize() {
-        return timerSize;
-    }
-
-    public void setTimerSize(Dimension timerSize) {
-        this.timerSize = timerSize;
-    }
-
-    public Dimension getColorPaletteDim() {
-        return colorPaletteDim;
-    }
-
-    public void setColorPaletteDim(Dimension colorPaletteDim) {
-        this.colorPaletteDim = colorPaletteDim;
-    }
-
-
-
 
 }

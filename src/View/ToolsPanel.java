@@ -81,7 +81,7 @@ public class ToolsPanel extends JPanel implements Observer {
         for (int i = 0; i < strokeIcons.length; i++) {
             StrokeController sc = new StrokeController(i);
             strokeButton = new JToggleButton(strokeIcons[i], i==0);
-            //strokeButton.setSize(GlobalConstants.STROKE_BUTTON_DIM.width, GlobalConstants.STROKE_BUTTON_DIM.height);
+            strokeButton.setSize(GlobalConstants.STROKE_BUTTON_DIM.width, GlobalConstants.STROKE_BUTTON_DIM.height);
             strokeButton.setBorderPainted(true);
             strokeButton.setOpaque(true);
             strokeButton.addItemListener(sc);
@@ -119,12 +119,12 @@ public class ToolsPanel extends JPanel implements Observer {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        model.setColorPaletteDim(super.getSize());
     }
 
     @Override
     public void update(Observable o, Object arg) {
         repaint();
+
     }
 
     private class PaletteController implements ItemListener {
@@ -142,6 +142,7 @@ public class ToolsPanel extends JPanel implements Observer {
                 model.setSelectedColor(colors[index]);
                 EtchedBorder border = new EtchedBorder(EtchedBorder.LOWERED);
                 source.setBorder(border);
+                source.setRolloverEnabled(true);
             }
         }
     }

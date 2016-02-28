@@ -4,6 +4,7 @@
  */
 
 package com.company;
+
 import Misc.GlobalConstants;
 import Model.Model;
 import View.*;
@@ -11,6 +12,8 @@ import View.*;
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 
 // Top level container class
@@ -29,6 +32,7 @@ class Doodle {
         JFrame frame = new JFrame(GlobalConstants.APPLICATION_NAME);
         JPanel canvasContainer = new JPanel();
         canvasContainer.setLayout(new GridBagLayout());
+
         GridBagConstraints gcons = new GridBagConstraints();
         gcons.anchor = GridBagConstraints.CENTER;
 
@@ -66,8 +70,16 @@ class Doodle {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // Make the frame visible
 
-        //frame.pack();
         frame.setVisible(true);
+
+        // Listen for resizing
+        frame.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                super.componentResized(e);
+                model.setScreenSize(e.getComponent().getSize());
+            }
+        });
     }
 
     public static void main(String[] args) {

@@ -71,12 +71,6 @@ public class TimeSlider extends JPanel implements Observer {
     }
 
     @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        model.setTimerSize(super.getSize());
-    }
-
-    @Override
     public void update(Observable o, Object arg) {
         timeLine.removeChangeListener(sc);
         if (model.isReset()) {
@@ -99,7 +93,6 @@ public class TimeSlider extends JPanel implements Observer {
         }
         timeLine.setValue(model.getTimeLineState());
         timeLine.addChangeListener(sc);
-        repaint();
     }
 
     private void setupTimeLine(boolean setup) {

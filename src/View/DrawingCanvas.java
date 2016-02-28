@@ -12,7 +12,8 @@ import Model.Model;
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -40,9 +41,6 @@ public class DrawingCanvas extends JPanel implements Observer {
         super.paintComponent(g);
         Graphics2D graphics2D = (Graphics2D) g;
         graphics2D.setStroke(new BasicStroke(2));
-
-        // Screen sizing
-
         // Anti-aliasing, looks nicer
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
@@ -92,7 +90,8 @@ public class DrawingCanvas extends JPanel implements Observer {
                 }
             } else {
                 if (pos.key() != -1) {
-                    graphics2D.drawLine(prevX, prevY, pos.key(), pos.value());
+                    drawResizedLines(graphics2D, prevX, prevY, pos);
+                    //graphics2D.drawLine(prevX, prevY, pos.key(), pos.value());
                 } else {
                     strokes--;
                     currStroke++;
@@ -107,7 +106,24 @@ public class DrawingCanvas extends JPanel implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
+        double sizeRatioX = model.screenRatioX;
+        double sizeRatioY = model.screenRatioY;
+        Dimension change = new Dimension(((Double)(GlobalConstants.DEFAULT_CANVAS_SIZE.width*sizeRatioX)).intValue(),
+                ((Double)(GlobalConstants.DEFAULT_CANVAS_SIZE.height*sizeRatioY)).intValue());
+        if (model.isDrawIsFit()) {
+            super.setSize(change);
+        }
         repaint();
+    }
+
+    private void drawResizedLines (Graphics2D g2, int prevX, int prevY, Coordinate pos) {
+        if (!model.isDrawIsFit()) {
+            g2.drawLine(prevX, prevY, pos.key(), pos.value());
+        } else {
+            g2.drawLine(((Double)(prevX*model.screenRatioX)).intValue(),
+                    ((Double)(prevY*model.screenRatioY)).intValue(), ((Double)(pos.key()*model.screenRatioX)).intValue(),
+                    ((Double)(pos.value()*model.screenRatioY)).intValue());
+        }
     }
 
     /**
@@ -120,13 +136,13 @@ public class DrawingCanvas extends JPanel implements Observer {
         public void mousePressed(MouseEvent e) {
             model.setDraw(true);
             strokeInit();
-            model.drawPoints(e.getX(), e.getY());
+            resizedDraw(e.getX(), e.getY());
         }
 
         @Override
         public void mouseDragged(MouseEvent e) {
             strokeInit();
-            model.drawPoints(e.getX(), e.getY());
+            resizedDraw(e.getX(), e.getY());
         }
 
         @Override
@@ -139,6 +155,15 @@ public class DrawingCanvas extends JPanel implements Observer {
             model.setCurrentX(-1);
             model.setCurrentY(-1);
             //}
+        }
+
+        private void resizedDraw(int x, int y) {
+            if (model.isDrawIsFit()) {
+                model.drawPoints(((Double) (x / model.screenRatioX)).intValue(),
+                        ((Double) (y / model.screenRatioY)).intValue());
+            } else {
+                model.drawPoints(x,y);
+            }
         }
 
         private void strokeInit() {

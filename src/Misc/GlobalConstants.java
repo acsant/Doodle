@@ -20,12 +20,9 @@ public class GlobalConstants {
     public static final String DESCRIPTION = "";
     public static final String COLOR_PALETTE_NAME = "Colors";
     public static final String TIMELINE_NAME = "Animate";
-    public static final String START_BUTTON = "Start";
-    public static final String END_BUTTON = "End";
     public static final String EXIT_TEXT = "Exit";
     public static final String SAVE_TEXT = "Save";
     public static final String LOAD_TEXT = "Load";
-    public static final String PLAY_BUTTON = "Play";
     public static final String FULL_SIZE_TEXT = "Full-Size";
     public static final String TXT_SAVE_TEXT = "TXT";
     public static final String BIN_SAVE_TEXT = "BIN";

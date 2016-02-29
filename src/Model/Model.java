@@ -43,6 +43,7 @@ public class Model extends Observable implements Serializable {
     private Dimension screenSize = GlobalConstants.SCREEN_SIZE;
     public double screenRatioX = 1;
     public double screenRatioY = 1;
+    public int timelinePos = 0;
 
     public Model() {
         super.setChanged();
@@ -72,6 +73,29 @@ public class Model extends Observable implements Serializable {
             currentY = y;
             setChanged();
             notifyViews();
+        }
+    }
+
+    public void checkForContinuity () {
+        if (timelinePos > GlobalConstants.TIMELINE_SPACING) {
+            ArrayList<Coordinate> toRemove = new ArrayList<Coordinate>();
+            int temp = timelinePos % GlobalConstants.TIMELINE_SPACING;
+            int numStrk = (timelinePos - temp) / GlobalConstants.TIMELINE_SPACING;
+            int diff = temp;
+            if (numStrk < maxStroke - 1) {
+                for (Coordinate c : drawingCoords) {
+                    if (diff < 1) {
+                        toRemove.add(c);
+                    }
+                    if (numStrk < 1) {
+                        diff--;
+                    }
+                    if (c.key() == -1 && c.key() == c.value()) {
+                        numStrk--;
+                    }
+                }
+            }
+            drawingCoords.removeAll(toRemove);
         }
     }
 
@@ -370,6 +394,10 @@ public class Model extends Observable implements Serializable {
         screenRatioX = size.getWidth() / GlobalConstants.SCREEN_SIZE.getWidth();
         screenRatioY = size.getHeight() / GlobalConstants.SCREEN_SIZE.getHeight();
         screenSize = size;
+    }
+
+    public Color getSelectedColor () {
+        return selectedColor;
     }
 
     public Dimension getScreenSize () {

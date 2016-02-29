@@ -9,9 +9,12 @@ import Misc.GlobalConstants;
 import Model.Model;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
@@ -31,13 +34,21 @@ public class ToolsPanel extends JPanel implements Observer {
     JToggleButton colorSwatch;
     ButtonGroup strokeGroup = new ButtonGroup();
     ImageIcon[] strokeIcons = new ImageIcon[GlobalConstants.STROKES.length];
+    JButton colorChooser = new JButton();
+    JPanel ccPanel = new JPanel();
+    JColorChooser colorDialog = new JColorChooser(Color.BLACK);
     //Box strokeBoxLayout = Box.createVerticalBox();
 
     // Instantiating the tools panel
     public ToolsPanel (Model _model) {
         super();
+
         model = _model;
+        colorDialog.setPreviewPanel(new JPanel());
+        ccPanel.setBorder(new EmptyBorder(GlobalConstants.PADDING, GlobalConstants.PADDING, GlobalConstants.PADDING,
+                GlobalConstants.PADDING));
         super.setLayout(new GridBagLayout());
+        colorChooser.setSize(GlobalConstants.CURRENT_COLOR);
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.BOTH;
         constraints.gridx = 1;
@@ -56,9 +67,30 @@ public class ToolsPanel extends JPanel implements Observer {
                 GlobalConstants.STROKE_PALETTE_NAME);
         colorPalette.setBorder(titledBorder);
         strokePalette.setBorder(strokeBorder);
+        colorChooser.setMinimumSize(GlobalConstants.CURRENT_COLOR);
         vertBox.add(colorPalette);
         vertBox.add(strokePalette);
         vertBox.setVisible(true);
+        colorChooser.setBackground(model.getSelectedColor());
+        colorChooser.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Color backGround = null;
+                backGround = colorDialog.showDialog(null, "Pick a color", Color.BLACK);
+                if (backGround != null) {
+                    model.setSelectedColor(backGround);
+                    colorChooser.setBackground(backGround);
+                    colorGroup.clearSelection();
+                }
+            }
+        });
+        ccPanel.setLayout(new BorderLayout());
+        colorChooser.setMinimumSize(new Dimension());
+        ccPanel.add(colorChooser, BorderLayout.CENTER);
+        super.add(ccPanel, constraints);
+        constraints.gridx = 1;
+        constraints.gridy = 2;
+        constraints.weighty = 3;
         super.add(vertBox, constraints);
         super.setVisible(true);
     }
@@ -103,11 +135,8 @@ public class ToolsPanel extends JPanel implements Observer {
         for (int i = 0; i < icons.length; i++) {
             PaletteController pc = new PaletteController(i);
             colorSwatch = new JToggleButton(icons[i], i==0);
-            colorSwatch.setAlignmentX(SwingConstants.CENTER);
-            colorSwatch.setAlignmentY(SwingConstants.CENTER);
             colorSwatch.setMaximumSize(new Dimension(swatchDim, swatchDim));
             colorSwatch.setBackground(colors[i]);
-            colorSwatch.setForeground(colors[i]);
             colorSwatch.setBorderPainted(false);
             colorSwatch.setOpaque(true);
             colorSwatch.addItemListener(pc);
@@ -140,7 +169,9 @@ public class ToolsPanel extends JPanel implements Observer {
             JToggleButton source = (JToggleButton) e.getSource();
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 model.setSelectedColor(colors[index]);
+                colorChooser.setBackground(colors[index]);
                 EtchedBorder border = new EtchedBorder(EtchedBorder.LOWERED);
+                source.setSelected(false);
                 source.setBorder(border);
                 source.setRolloverEnabled(true);
             }

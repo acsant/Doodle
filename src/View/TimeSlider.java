@@ -109,6 +109,7 @@ public class TimeSlider extends JPanel implements Observer {
         public void stateChanged(ChangeEvent e) {
             JSlider source = (JSlider) e.getSource();
             //if (!source.getValueIsAdjusting()) {
+                model.timelinePos = source.getValue();
                 model.setTimeLineState(source.getValue());
                 model.setTimeLineAction(true);
            // }

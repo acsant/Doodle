@@ -68,7 +68,7 @@ public class DrawingCanvas extends JPanel implements Observer {
             }
             if (strokes == 1 && model.isTimeLineAction() && lastPoint == -1) {
                 if (model.getStrokeLengths().size() == model.getMaxStroke()) {
-                    lastPoint = model.getStrokeLengths().get(temp - 1) * (lastRatio * GlobalConstants.TIMELINE_SPACING);
+                    lastPoint = model.getStrokeLengths().get(temp - 1) * (lastRatio * 10);
                     lastPoint = lastPoint/100;
                 }
             }
@@ -136,12 +136,17 @@ public class DrawingCanvas extends JPanel implements Observer {
         public void mousePressed(MouseEvent e) {
             model.setDraw(true);
             strokeInit();
+            if (model.timelinePos % GlobalConstants.TIMELINE_SPACING != 0) {
+               // model.checkForContinuity();
+                model.timelinePos = model.getTimeLineState();
+            }
             resizedDraw(e.getX(), e.getY());
         }
 
         @Override
         public void mouseDragged(MouseEvent e) {
             strokeInit();
+            model.timelinePos = model.getTimeLineState();
             resizedDraw(e.getX(), e.getY());
         }
 

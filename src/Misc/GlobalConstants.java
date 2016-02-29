@@ -34,6 +34,9 @@ public class GlobalConstants {
     public static final Dimension STROKE_BUTTON_DIM = new Dimension(80, 25);
     public static final String STROKE_PALETTE_NAME = "Thickness";
     public static final String RESOURCES_PATH = "/Resources/";
+    public static final Dimension CURRENT_COLOR = new Dimension(50, 50);
+    public static final int COLOR_VIEWER = 80;
+    public static final int PADDING = 10;
     public static final List MICROSOFT_SUGGESTED_COLORS = Arrays.asList(
             "Black", "Gray", "Maroon", "Red", "Green", "Lime", "Olive", "Yellow", "Navy", "Blue", "Purple",
             "Fuchsia", "Teal", "Aqua", "Silver", "White"

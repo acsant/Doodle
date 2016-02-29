@@ -7,10 +7,8 @@ package View;
 
 import Misc.GlobalConstants;
 import Model.Model;
-import sun.net.ResourceManager;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -27,7 +25,6 @@ public class MenuView extends JMenuBar implements Observer {
     JMenu view = new JMenu(GlobalConstants.VIEW_MENU);
     JMenuItem exit = new JMenuItem(GlobalConstants.EXIT_TEXT);
     JMenuItem copy = new JMenuItem(GlobalConstants.COPY_TEXT);
-    JMenuItem paste = new JMenuItem(GlobalConstants.PASTE_TEXT);
     JMenuItem txtSave = new JMenuItem(GlobalConstants.TXT_SAVE_TEXT);
     JMenuItem binSave = new JMenuItem(GlobalConstants.BIN_SAVE_TEXT);
     JMenuItem createnew = new JMenuItem(GlobalConstants.CREATE_NEW_TEXT);
@@ -38,14 +35,14 @@ public class MenuView extends JMenuBar implements Observer {
     JMenuItem fitScreen = new JMenuItem(GlobalConstants.FIT_SCREEN_TEXT, null);
     JFileChooser fileChooser = new JFileChooser();
     final String EXIT_IMAGE = "exit.png";
+    final String COPY_IMAGE = "copy.png";
     final String SAVE_IMAGE = "save.png";
     final String LOAD_IMAGE = "load.png";
     final String CHECK_IMAGE = "check.png";
     final String BIN_SAVE_IMAGE = "bin_save.png";
     final String TXT_SAVE_IMAGE = "textsave.png";
     final String CREATE_NEW_IMAGE = "createnew.png";
-    ImageIcon checkIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-            ResourceManager.class.getResource(GlobalConstants.RESOURCES_PATH + CHECK_IMAGE)));
+    ImageIcon checkIcon = new ImageIcon(GlobalConstants.RESOURCES_PATH + CHECK_IMAGE);
     MenuController mc = new MenuController();
     Model model;
 
@@ -53,18 +50,13 @@ public class MenuView extends JMenuBar implements Observer {
         // Setup the menus
         model = _model;
         // Get all the resources for the menus
-        ImageIcon exitIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                ResourceManager.class.getResource(GlobalConstants.RESOURCES_PATH + EXIT_IMAGE)));
-        ImageIcon saveIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                ResourceManager.class.getResource(GlobalConstants.RESOURCES_PATH + SAVE_IMAGE)));
-        ImageIcon loadIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                ResourceManager.class.getResource(GlobalConstants.RESOURCES_PATH + LOAD_IMAGE)));
-        ImageIcon binSaveIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                ResourceManager.class.getResource(GlobalConstants.RESOURCES_PATH + BIN_SAVE_IMAGE)));
-        ImageIcon txtSaveIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                ResourceManager.class.getResource(GlobalConstants.RESOURCES_PATH + TXT_SAVE_IMAGE)));
-        ImageIcon createNewIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-                ResourceManager.class.getResource(GlobalConstants.RESOURCES_PATH + CREATE_NEW_IMAGE)));
+        ImageIcon exitIcon = new ImageIcon(GlobalConstants.RESOURCES_PATH + EXIT_IMAGE);
+        ImageIcon saveIcon = new ImageIcon(GlobalConstants.RESOURCES_PATH + SAVE_IMAGE);
+        ImageIcon loadIcon = new ImageIcon(GlobalConstants.RESOURCES_PATH + LOAD_IMAGE);
+        ImageIcon binSaveIcon = new ImageIcon(GlobalConstants.RESOURCES_PATH + BIN_SAVE_IMAGE);
+        ImageIcon txtSaveIcon = new ImageIcon(GlobalConstants.RESOURCES_PATH + TXT_SAVE_IMAGE);
+        ImageIcon createNewIcon = new ImageIcon(GlobalConstants.RESOURCES_PATH + CREATE_NEW_IMAGE);
+        ImageIcon copyIcon = new ImageIcon(GlobalConstants.RESOURCES_PATH + COPY_IMAGE);
 
         // View menu
         radioGroup.add(fullSize);
@@ -88,6 +80,7 @@ public class MenuView extends JMenuBar implements Observer {
         txtSave.addActionListener(mc);
         binSave.addActionListener(mc);
         copy.addActionListener(mc);
+        copy.setIcon(copyIcon);
         exit.setIcon(exitIcon);
         exit.addActionListener(mc);
         file.add(createnew);

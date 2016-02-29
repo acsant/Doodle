@@ -7,7 +7,6 @@ package View;
 
 import Misc.GlobalConstants;
 import Model.Model;
-import sun.net.ResourceManager;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -36,12 +35,9 @@ public class TimeSlider extends JPanel implements Observer {
     final String PLAY = "play.png";
     final String START = "rewind.png";
     final String END = "forward.png";
-    ImageIcon playIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-            ResourceManager.class.getResource(GlobalConstants.RESOURCES_PATH + PLAY)));
-    ImageIcon rewindIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-            ResourceManager.class.getResource(GlobalConstants.RESOURCES_PATH + START)));
-    ImageIcon forwardIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-            ResourceManager.class.getResource(GlobalConstants.RESOURCES_PATH + END)));
+    ImageIcon playIcon = new ImageIcon(GlobalConstants.RESOURCES_PATH + PLAY);
+    ImageIcon rewindIcon = new ImageIcon(GlobalConstants.RESOURCES_PATH + START);
+    ImageIcon forwardIcon = new ImageIcon(GlobalConstants.RESOURCES_PATH + END);
 
     // Initializing Time Slider
     public TimeSlider (Model _model) {

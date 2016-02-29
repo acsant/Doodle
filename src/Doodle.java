@@ -3,8 +3,6 @@
  * University of Waterloo - CS 349
  */
 
-package com.company;
-
 import Misc.GlobalConstants;
 import Model.Model;
 import View.*;
@@ -87,7 +85,7 @@ class Doodle {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                SplashScreen splash = new SplashScreen(GlobalConstants.NAME, GlobalConstants.USER_ID,
+                SplashView splash = new SplashView(GlobalConstants.NAME, GlobalConstants.USER_ID,
                         GlobalConstants.STUDENT_NUMBER, GlobalConstants.DESCRIPTION,
                         GlobalConstants.SCREEN_SIZE);
                 splash.addMouseListener(new MouseInputAdapter() {

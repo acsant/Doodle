@@ -3,8 +3,6 @@
  * University of Waterloo - CS 349
  */
 
-package com.company;
-
 import Misc.GlobalConstants;
 import Model.Model;
 import View.*;

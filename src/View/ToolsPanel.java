@@ -44,7 +44,6 @@ public class ToolsPanel extends JPanel implements Observer {
         super();
 
         model = _model;
-        colorDialog.setPreviewPanel(new JPanel());
         ccPanel.setBorder(new EmptyBorder(GlobalConstants.PADDING, GlobalConstants.PADDING, GlobalConstants.PADDING,
                 GlobalConstants.PADDING));
         super.setLayout(new GridBagLayout());

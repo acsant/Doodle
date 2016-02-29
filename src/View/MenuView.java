@@ -23,8 +23,11 @@ import java.util.Observer;
 public class MenuView extends JMenuBar implements Observer {
 
     JMenu file = new JMenu(GlobalConstants.FILE_MENU);
+    JMenu edit = new JMenu(GlobalConstants.EDIT_MENU);
     JMenu view = new JMenu(GlobalConstants.VIEW_MENU);
     JMenuItem exit = new JMenuItem(GlobalConstants.EXIT_TEXT);
+    JMenuItem copy = new JMenuItem(GlobalConstants.COPY_TEXT);
+    JMenuItem paste = new JMenuItem(GlobalConstants.PASTE_TEXT);
     JMenuItem txtSave = new JMenuItem(GlobalConstants.TXT_SAVE_TEXT);
     JMenuItem binSave = new JMenuItem(GlobalConstants.BIN_SAVE_TEXT);
     JMenuItem createnew = new JMenuItem(GlobalConstants.CREATE_NEW_TEXT);
@@ -84,6 +87,7 @@ public class MenuView extends JMenuBar implements Observer {
         txtSave.setIcon(txtSaveIcon);
         txtSave.addActionListener(mc);
         binSave.addActionListener(mc);
+        copy.addActionListener(mc);
         exit.setIcon(exitIcon);
         exit.addActionListener(mc);
         file.add(createnew);
@@ -91,9 +95,11 @@ public class MenuView extends JMenuBar implements Observer {
         file.add(save);
         file.addSeparator();
         file.add(exit);
+        edit.add(copy);
         view.add(fullSize);
         view.add(fitScreen);
         super.add(file);
+        super.add(edit);
         super.add(view);
         super.setVisible(true);
     }
@@ -142,6 +148,8 @@ public class MenuView extends JMenuBar implements Observer {
                     fitScreen.setIcon(checkIcon);
                     fullSize.setIcon(null);
                     model.setDrawIsFit(true);
+                } else if (item.equals(copy)) {
+                    model.doCopy();
                 }
             }
         }

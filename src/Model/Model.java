@@ -1,10 +1,13 @@
 package Model;
 
 import Misc.GlobalConstants;
+import View.DrawingCanvas;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.*;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -12,7 +15,7 @@ import java.util.Observable;
 /**
  * Created by Akash-Mac on 2016-02-17.
  */
-public class Model extends Observable implements Serializable {
+public class Model extends Observable implements Serializable, ClipboardOwner {
     // Variable declarations
     // Keeps track of current drawing piints
     private int prevX = -1;
@@ -27,6 +30,8 @@ public class Model extends Observable implements Serializable {
     private boolean newStroke = true;
     private boolean reset = false;
     private boolean drawIsFit = false;
+    private boolean do_copy = false;
+    private DrawingCanvas canvasState = null;
 
     // Model variables to save data
     private ArrayList<Coordinate> drawingCoords = new ArrayList<>();
@@ -396,12 +401,73 @@ public class Model extends Observable implements Serializable {
         screenSize = size;
     }
 
+    public boolean isDo_copy() {
+        return do_copy;
+    }
+
+    public void setDo_copy(boolean do_copy) {
+        this.do_copy = do_copy;
+    }
+
     public Color getSelectedColor () {
         return selectedColor;
     }
 
     public Dimension getScreenSize () {
         return screenSize;
+    }
+
+    public void doCopy () {
+        BufferedImage copy = new BufferedImage(canvasState.getWidth(), canvasState.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        canvasState.paint(copy.getGraphics());
+        TransferableImage copiedImg = new TransferableImage(copy);
+        Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+        c.setContents(copiedImg, this);
+    }
+
+    public void setCanvasState (DrawingCanvas canvas) {
+        canvasState = canvas;
+    }
+
+    @Override
+    public void lostOwnership(Clipboard clipboard, Transferable contents) {
+        System.out.println("Lost Ownership of the clipboard");
+    }
+
+    private class TransferableImage implements Transferable {
+
+        Image image;
+
+        public TransferableImage (Image img) {
+            image = img;
+        }
+
+        @Override
+        public DataFlavor[] getTransferDataFlavors() {
+            DataFlavor[] list = new DataFlavor[1];
+            list[0] = DataFlavor.imageFlavor;
+            return list;
+        }
+
+        @Override
+        public boolean isDataFlavorSupported(DataFlavor flavor) {
+            DataFlavor[] flavours = getTransferDataFlavors();
+            for (DataFlavor flav : flavours) {
+                if (flav.equals(flavor)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+            if (flavor.equals(DataFlavor.imageFlavor) && image != null) {
+                return image;
+            } else {
+                throw new UnsupportedFlavorException(flavor);
+            }
+        }
     }
 
 }

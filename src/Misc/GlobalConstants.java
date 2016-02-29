@@ -13,6 +13,7 @@ public class GlobalConstants {
     public static final Dimension DEFAULT_CANVAS_SIZE = new Dimension(800, 600);
     public static final Dimension MINIMUM_SCREEN_SIZE = new Dimension(SCREEN_SIZE.width/2, (SCREEN_SIZE.height/2) + 200);
     public static final String FILE_MENU = "File";
+    public static final String EDIT_MENU = "Edit";
     public static final String VIEW_MENU = "View";
     public static final String NAME = "Akash Sant";
     public static final String USER_ID = "acsant";
@@ -23,6 +24,8 @@ public class GlobalConstants {
     public static final String EXIT_TEXT = "Exit";
     public static final String SAVE_TEXT = "Save";
     public static final String LOAD_TEXT = "Load";
+    public static final String COPY_TEXT = "Copy";
+    public static final String PASTE_TEXT = "Paste";
     public static final String FULL_SIZE_TEXT = "Full-Size";
     public static final String TXT_SAVE_TEXT = "TXT";
     public static final String BIN_SAVE_TEXT = "BIN";

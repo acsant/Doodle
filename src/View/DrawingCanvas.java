@@ -40,6 +40,7 @@ public class DrawingCanvas extends JPanel implements Observer {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D graphics2D = (Graphics2D) g;
+
         graphics2D.setStroke(new BasicStroke(2));
         // Anti-aliasing, looks nicer
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -136,10 +137,14 @@ public class DrawingCanvas extends JPanel implements Observer {
         public void mousePressed(MouseEvent e) {
             model.setDraw(true);
             strokeInit();
-            if (model.timelinePos % GlobalConstants.TIMELINE_SPACING != 0) {
-               // model.checkForContinuity();
-                model.timelinePos = model.getTimeLineState();
-            }
+            /*if (model.timelinePos % GlobalConstants.TIMELINE_SPACING != 0) {
+                model.checkForContinuity();
+                ArrayList<Coordinate> tempList = model.getDrawingCoords();
+                Coordinate last = tempList.get(tempList.size() - 1);
+                if (last.key() != -1) {
+                    resizedDraw(-1,-1);
+                }
+            }*/
             resizedDraw(e.getX(), e.getY());
         }
 
@@ -180,4 +185,5 @@ public class DrawingCanvas extends JPanel implements Observer {
             }
         }
     }
+
 }

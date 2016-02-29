@@ -68,6 +68,7 @@ class Doodle {
 
         frame.setMinimumSize(GlobalConstants.MINIMUM_SCREEN_SIZE);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        model.setCanvasState(canvas);
         // Make the frame visible
 
         frame.setVisible(true);
